@@ -46,4 +46,133 @@ def play_game():
     print(player_position.name)
     print(player_position.description)
     print("Available exits:", ", ".join(player_position.exits))
-    print("Items in room:",
+    print("Enemies in room:", ", ".join([enemy.name for enemy in player_position.enemies]))
+    print("Inventory:", ", ".join(player.inventory))
+    print("Health:", player.health)
+
+    # Handle player's move
+    move = input("Enter a command: ")
+
+    if move.lower() == "q":
+      game_over = True
+    elif move.lower() == "go north":
+      if "north" in player_position.exits:
+        player_position = bedroom
+      else:
+        print("You can't go that way.")
+    elif move.lower() == "go east":
+      if "east" in player_position.exits:
+        player_position = kitchen
+      else:
+        print("You can't go that way.")
+    elif move.lower() == "go south":
+      if "south" in player_position.exits:
+        player_position = living_room
+      else:
+        print("You can't go that way.")
+    elif move.lower() == "go west":
+      if "west" in player_position.exits:
+        player_position = bathroom
+      else:
+        print("You can't go that way.")
+    elif move.lower().startswith("pick up"):
+      item_to_pick_up = move[8:]
+      if item_to_pick_up in player_position.items:
+        player.inventory.append(item_to_pick_up)
+        player_position.items.remove(item_to_pick_up)
+        print("You picked up the", item_to_pick_up)
+      else:
+        print("You can't pick that up.")
+    elif move.lower().startswith("drop"):
+      item_to_drop = move[5:]
+      if item_to_drop in player.inventory:
+        player_position.items.append(item_to_drop)
+        player.inventory.remove(item_to_drop)
+        print("You dropped the", item_to_drop)
+      else:
+        print("You don't have that item.")
+    elif move.lower() == "fight":
+      if player_position.enemies:
+        enemy = player_position.enemies[0]
+        print("You are fighting a", enemy.name)
+        while player.health > 0 and enemy.health > 0:
+          player.health -= enemy.attack_power
+          enemy.health -= player.attack_power
+          print("Your health:", player.health)
+          print(enemy.name, "health:", enemy.health)
+        if player.health > 0:
+          print("You defeated the", enemy.name)
+          player_position.enemies.remove(enemy)
+        else:
+          print("You were defeated by the", enemy.name)
+          game_over = True
+      else:
+        print("There are no enemies here.")
+    elif move.lower() == "flee":
+      if player_position.enemies:
+        print("You fled from the", enemy.name)
+        player_position = bedroom
+      else:
+        print("There are no enemies here.")
+    else:
+      print("I didn't understand that command.")
+
+    # Check if player has won the game
+    if player_position == treasure_room and not player_position.enemies:
+      print("Congratulations, you won the game!")
+      game_over = True
+
+# Start the game
+play_game()
+
+# Define classes for different types of items
+class Weapon:
+  def __init__(self, name, damage):
+    self.name = name
+    self.damage = damage
+
+class Armor:
+  def __init__(self, name, defense):
+    self.name = name
+    self.defense = defense
+
+class Potion:
+  def __init__(self, name, health):
+    self.name = name
+    self.health = health
+
+# Define classes for different types of enemies
+class Skeleton:
+  def __init__(self, health, attack_power):
+    self.name = "Skeleton"
+    self.health = health
+    self.attack_power = attack_power
+
+class Zombie:
+  def __init__(self, health, attack_power):
+    self.name = "Zombie"
+    self.health = health
+    self.attack_power = attack_power
+
+class Boss:
+  def __init__(self, health, attack_power):
+    self.name = "Boss"
+    self.health = health
+    self.attack_power = attack_power
+
+# Define classes for different types of rooms
+class PuzzleRoom:
+  def __init__(self, name, description, exits, items):
+    self.name = name
+    self.description = description
+    self.exits = exits
+    self.items = items
+    self.puzzle = "Solve the puzzle to unlock the exit."
+
+class TrapRoom:
+  def __init__(self, name, description, exits, items, enemies):
+    self.name = name
+    self.description = description
+    self.exits = exits
+    self.items = items
+    self.enemies = enemies

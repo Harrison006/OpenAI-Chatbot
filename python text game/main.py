@@ -176,3 +176,75 @@ class TrapRoom:
     self.exits = exits
     self.items = items
     self.enemies = enemies
+class BossRoom:
+  def __init__(self, name, description, exits, enemies):
+    self.name = name
+    self.description = description
+    self.exits = exits
+    self.enemies = enemies
+
+# Define a Player class to represent the player character
+class Player:
+  def __init__(self, inventory, health, attack_power, defense):
+    self.inventory = inventory
+    self.health = health
+    self.attack_power = attack_power
+    self.defense = defense
+
+# Define a function to play the game
+def play_game():
+  # Define weapons
+  sword = Weapon("Sword", 10)
+  axe = Weapon("Axe", 20)
+
+  # Define armor
+  shield = Armor("Shield", 5)
+  helmet = Armor("Helmet", 10)
+
+  # Define potions
+  health_potion = Potion("Health Potion", 20)
+  mana_potion = Potion("Mana Potion", 10)
+
+  # Define enemies
+  skeleton1 = Skeleton(50, 10)
+  skeleton2 = Skeleton(50, 10)
+  zombie1 = Zombie(100, 20)
+  zombie2 = Zombie(100, 20)
+  boss = Boss(200, 30)
+
+  # Define rooms
+  bedroom = Room("Bedroom", "You are in a cozy bedroom.", ["north"], ["key"], [])
+  kitchen = Room("Kitchen", "You are in a spacious kitchen.", ["east"], ["cake"], [skeleton1, skeleton2])
+  living_room = Room("Living Room", "You are in a comfortable living room.", ["south"], ["book"], [])
+  bathroom = Room("Bathroom", "You are in a clean bathroom.", ["west"], ["toothbrush"], [])
+  puzzle_room = PuzzleRoom("Puzzle Room", "You are in a room with a puzzle.", [], [health_potion, mana_potion], "Solve the puzzle to unlock the exit.")
+  trap_room = TrapRoom("Trap Room", "You are in a room with traps.", [], [shield, helmet], [zombie1, zombie2])
+  boss_room = BossRoom("Boss Room", "You are in a room with the boss.", ["boss"], [boss])
+
+  # Initialize game variables
+  game_over = False
+  player_position = bedroom
+
+  # Define player
+  player = Player([], 100, 10, 5)
+
+  # Game loop
+  while not game_over:
+    # Print current room
+    print(player_position.name)
+    print(player_position.description)
+    print("Available exits:", ", ".join(player_position.exits))
+    print("Items in room:", ", ".join(player_position.items))
+    print("Enemies in room:", ", ".join([enemy.name for enemy in player_position.enemies]))
+    if isinstance(player_position, PuzzleRoom):
+      print(player_position.puzzle)
+    print("Inventory:", ", ".join([item.name for item in player.inventory]))
+    print("Health:", player.health)
+
+
+
+
+"""
+As you can see it is repeating itself but this is REALLY DETAILED
+
+"""
